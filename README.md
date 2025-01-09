@@ -25,7 +25,7 @@ Get onledger code hex:
 curl -X POST 'https://mainnet.radixdlt.com/state/package/page/codes' -H 'Content-Type: application/json' -d '{"package_address": "package_rdx1p4k2vlr6rejahqfdazv2qff7dl5d88dxkpechapfx77exgv96wu8mk"}' | jq -r '.items[0].code_hex' > locker_onledger.hex
 ```
 
-When deploying to the radix ledger some wasm is removed which results in these files not being identical how we can see locker_onledger.hex is a subset of locker.hex using:
+When deploying to the radix ledger some wasm is removed which results in these files not being identical, however we can see locker_onledger.hex is a subset of locker.hex using:
 
 ```bash
 grep -F -f locker_onledger.hex locker.hex > /dev/null && echo "Valid" || echo "Not valid"
