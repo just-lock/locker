@@ -13,20 +13,14 @@ docker run -v .:/src radixdlt/scrypto-builder:v1.2.0
 
 ## Verifing onledger
 
-Get compiled code hex:
+When deploying to the radix ledger some wasm is changed. Therefore the only way I am aware of to verify the onledger code is to redeploy the newly comipled code and compare the code hashs using:
 
 ```bash
-xxd -p target/wasm32-unknown-unknown/release/locker.wasm | tr -d '\n' > locker.hex
+curl -X POST 'https://mainnet.radixdlt.com/state/package/page/codes' -H 'Content-Type: application/json' -d '{"package_address": "package_rdx1p4k2vlr6rejahqfdazv2qff7dl5d88dxkpechapfx77exgv96wu8mk"}'
 ```
 
-Get onledger code hex:
+and 
 
 ```bash
-curl -X POST 'https://mainnet.radixdlt.com/state/package/page/codes' -H 'Content-Type: application/json' -d '{"package_address": "package_rdx1p4k2vlr6rejahqfdazv2qff7dl5d88dxkpechapfx77exgv96wu8mk"}' | jq -r '.items[0].code_hex' > locker_onledger.hex
-```
-
-When deploying to the radix ledger some wasm is removed which results in these files not being identical, however we can see locker_onledger.hex is a subset of locker.hex using:
-
-```bash
-grep -F -f locker_onledger.hex locker.hex > /dev/null && echo "Valid" || echo "Not valid"
+curl -X POST 'https://mainnet.radixdlt.com/state/package/page/codes' -H 'Content-Type: application/json' -d '{"package_address": "{NEW_PACKAGE}"}'
 ```
